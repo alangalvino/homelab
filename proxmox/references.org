@@ -1,0 +1,6 @@
+* References
+:PROPERTIES:
+:CREATED_AT: [2023-12-10 19:41:44]
+:END:
+- [[https://www.wundertech.net/how-to-set-up-a-cluster-in-proxmox/][How to create a Proxmox cluster]]
+- [[https://www.virtualizationhowto.com/2023/06/mastering-ceph-storage-configuration-in-proxmox-8-cluster/][How to configure Ceph in a Proxmox cluster]]
