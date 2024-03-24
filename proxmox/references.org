@@ -4,3 +4,8 @@
 :END:
 - [[https://www.wundertech.net/how-to-set-up-a-cluster-in-proxmox/][How to create a Proxmox cluster]]
 - [[https://www.virtualizationhowto.com/2023/06/mastering-ceph-storage-configuration-in-proxmox-8-cluster/][How to configure Ceph in a Proxmox cluster]]
+- [[ https://ciaduck.blogspot.com/2020/04/proxmox-firewall-and-isolating-vms.html?m=1][How to configure Proxmox firewall]]
+- [[https://registry.terraform.io/providers/bpg/proxmox/latest][Terraform provider with firewall config capabilities]]
+- [[https://github.com/andrewglass3/ProxmoxCloudInitScript/blob/master/create-ubuntu-jammy-template.sh][Script to create VM template]]
+- [[https://www.apalrd.net/posts/2023/pve_cloud/][Another script example to create VM template]]
+- [[https://github.com/mirceanton/ansible_role-proxmox_cloudbuntu/tree/main/tasks][Ansible role to create VM template]]
