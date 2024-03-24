@@ -1,1 +1,21 @@
+* DONE Configure Ansible to bootstrap Proxmox cluster
+:PROPERTIES:
+:CREATED_AT: [2023-12-28 16:20:27]
+:END:
+* TODO Write Ansible scripts to bootstrap Pihole "cluster"
+:PROPERTIES:
+:CREATED_AT: [2023-12-28 18:43:06]
+:END:
+* TODO Configure Proxmox and Pihole firewalls
+:PROPERTIES:
+:CREATED_AT: [2023-12-28 08:34:41]
+:END:
+* TODO Configure a VM to handle docker containers
+:PROPERTIES:
+:CREATED_AT: [2023-12-28 09:02:23]
+:END:
 * TODO Migrate pihole LXC setup to terraform proxmox provider
+* TODO Configure a Pfsense VM
+:PROPERTIES:
+:CREATED_AT: [2023-12-28 08:46:19]
+:END:
