@@ -17,8 +17,10 @@ as a backup.
 - image: Debian 12
 *** Hosts
 **** Pihole
-- ip: 192.168.68.101
+- ip: 192.168.50.101
 - dns: cloudflare
 **** Pihole2
-- ip: 192.168.68.102
+- ip: 192.168.50.102
 - dns: quad9
+  
+  
