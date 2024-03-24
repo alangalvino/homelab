@@ -7,3 +7,4 @@
 - 3 CPUs
 - 8gb (7629 mib) RAM
 - 300gb Disk
+  
