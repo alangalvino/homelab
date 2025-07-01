@@ -4,3 +4,4 @@
 :END:
 - [[https://www.wundertech.net/how-to-install-pi-hole-on-proxmox/][How to install Pihole on a Debian LXC on Proxmox]]
 - [[https://github.com/drew1kun/ansible-role-pihole/tree/0315891ed63e406318c5e33bdcc0443f37e8b396][How to bootstrap Pihole using Ansible]]
+- [[https://den.dev/blog/pihole/][The Beauty Of Having A Pi-hole]] 

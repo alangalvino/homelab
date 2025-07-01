@@ -1,0 +1,42 @@
+* Enable autoboot after power failure
+** Setpci command
+#+begin_src shell
+setpci -s 0:1f.0 0xa4.b=0:1
+#+end_src
+** Make it run after each startup via systemd
+:PROPERTIES:
+:CREATED_AT: [2025-05-25 23:35:56]
+:END:
+*** Create systemd file
+#+begin_src shell
+sudo touch /etc/systemd/system/autoboot-after-power-failure.service
+#+end_src
+*** Edit systemd file
+#+begin_src 
+[Unit]
+Description=Run setpci command after startup
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/setpci -s 0:1f.0 0xa4.b=0:1
+RemainAfterExit=true
+User=root
+Environment=SYSTEMD_LOG_LEVEL=debug
+
+[Install]
+WantedBy=multi-user.target
+#+end_src
+*** Reload systemd
+#+begin_src shell
+sudo systemctl daemon-reload
+#+end_src
+*** Enable service to run at startup
+#+begin_src shell
+sudo systemctl enable autoboot-after-power-failure.service
+#+end_src
+
+*** Run it
+#+begin_src shell
+sudo systemctl start autoboot-after-power-failure.service
+#+end_src

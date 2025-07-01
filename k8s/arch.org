@@ -1,8 +1,0 @@
-* Nodes Overview
-- k8-master (Debian running inside graybox-1)
-  - ip: 192.168.68.
-- k8-slave-1 (Debian running inside graybox-2)
-  - ip: 192.168.68.
-- k8-slave-2 (Debian running inside graybox-3)
-  - ip: 192.168.68.
-  

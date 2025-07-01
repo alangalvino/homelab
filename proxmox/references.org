@@ -9,3 +9,4 @@
 - [[https://github.com/andrewglass3/ProxmoxCloudInitScript/blob/master/create-ubuntu-jammy-template.sh][Script to create VM template]]
 - [[https://www.apalrd.net/posts/2023/pve_cloud/][Another script example to create VM template]]
 - [[https://github.com/mirceanton/ansible_role-proxmox_cloudbuntu/tree/main/tasks][Ansible role to create VM template]]
+- [[https://codingpackets.com/blog/proxmox-cluster-change-ip-addresses/][How to Change Proxmox Cluster IP]]
