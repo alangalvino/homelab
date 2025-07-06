@@ -17,7 +17,7 @@ This homelab consists of three Mac Mini nodes running Proxmox VE, a Synology NAS
 - All VMs and containers share the subnet: 192.168.50.0/24
 - Static IP allocations separate hosts, VMs, and containers for clarity
 
-*  Architecture Diagram
+* Architecture Diagram
 
 #+BEGIN_SRC text :exports both :results verbatim
                +-----------------------------------------+

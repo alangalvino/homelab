@@ -7,14 +7,37 @@ passwd:
       groups: ["wheel", "sudo", "systemd-journal"]
       ssh_authorized_keys:
         - ${ssh_admin_public_key}
-
 storage:
+  links:
+    - path: /etc/localtime
+      target: ../usr/share/zoneinfo/Brazil/East
   files:
     - path: /etc/hostname
       mode: 0644
       contents:
         inline: ${hostname}
-
+    - path: /etc/NetworkManager/system-connections/ens18.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=ens18
+          type=ethernet
+          interface-name=ens18
+          [ipv4]
+          address1=${ip}/24,192.168.50.1
+          dhcp-hostname=${hostname}
+          dns=192.168.50.1
+          method=manual
+    - path: /etc/zincati/config.d/55-updates-strategy.toml
+      contents:
+        inline: |
+          [updates]
+          strategy = "periodic"
+          [[updates.periodic.window]]
+          days = [ "Sat", "Sun" ]
+          start_time = "23:00"
+          length_minutes = 60
 systemd:
   units:
     - name: portainer.service
@@ -40,6 +63,5 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
-
     - name: docker.service
       mask: true

@@ -14,7 +14,7 @@ variable "proxmox_password" {
   sensitive = true
 }
 
-variable "homelab_root_username" {
+variable "homelab_username" {
   type      = string
   default   = "root"
   sensitive = true
