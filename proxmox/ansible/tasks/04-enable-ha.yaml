@@ -1,0 +1,6 @@
+- name: Enable HA manager service (master node only)
+  systemd:
+    name: pve-ha-crm.service
+    enabled: yes
+    state: started
+  when: inventory_hostname == groups['proxmox'][0]

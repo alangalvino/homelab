@@ -1,0 +1,11 @@
+- name: Update apt cache and upgrade packages
+  hosts: proxmox
+  become: yes
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Upgrade all packages to latest version
+      ansible.builtin.apt:
+        upgrade: dist

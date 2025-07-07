@@ -1,0 +1,3 @@
+cluster_name: proxmox
+nfs_server: 192.168.50.10
+nfs_export: /volume1/proxmox
