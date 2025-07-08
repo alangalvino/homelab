@@ -1,8 +1,7 @@
 logs/
 .env
 *.img
-*.tfstate
-*.tfstate.backup
+*.tfstate*
 *.tfvars
 .terraform/
 .terraform.lock.hcl

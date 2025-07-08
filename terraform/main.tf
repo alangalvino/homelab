@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.78.2"
+      version = "0.79.0"
     }
   }
 }
@@ -19,14 +19,22 @@ provider "proxmox" {
 }
 
 module "home_assistant_vm" {
-  source = "../modules/home-assistant"
+  source = "./modules/proxmox-disk-image-vm"
   hostname = "home-assistant"
-  node_name = "pve3"
-  cores = 2
+  proxmox_node = "pve3"
+  cpu_cores = 2
   memory = 6144
   disk_size = 100
-  datastore_id = "nfs"
+  storage_pool = "nfs"
   image_url = "https://github.com/home-assistant/operating-system/releases/download/15.2/haos_ova-15.2.qcow2.xz"
   # Mapped to 192.168.40.25 ip in Unifi
-  mac_address = "02:5f:52:b4:3d:40"
+  network_vlan_id = 40
+  network_mac_address = "02:5f:52:b4:3d:40"
+}
+
+resource "proxmox_virtual_environment_haresource" "home_assistant_high_availability" {
+  resource_id  = "vm:${module.home_assistant_vm.id}"
+  comment = "Home Assistant HA"
+  max_relocate = 1
+  max_restart = 1
 }

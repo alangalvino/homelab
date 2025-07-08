@@ -2,13 +2,13 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.78.2"
+      version = "0.79.0"
     }
   }
 }
 
 locals {
-  temp_dir   = "/tmp/coreos_${uuid()}"
+  temp_dir   = "/tmp/proxmox-disk-image-${uuid()}"
   image_file = "${local.temp_dir}/${var.image_name}.img"
 }
 
@@ -29,8 +29,8 @@ resource "null_resource" "download_image" {
 
 resource "proxmox_virtual_environment_file" "upload_image" {
   content_type = "iso"
-  datastore_id = var.datastore_id
-  node_name    = var.node_name
+  datastore_id = var.storage_pool
+  node_name    = var.proxmox_node
 
   source_file {
     path = local.image_file

@@ -2,7 +2,7 @@ variable "hostname" {
   type      = string
 }
 
-variable "node_name" {
+variable "proxmox_node" {
   type      = string
 }
 
@@ -10,7 +10,7 @@ variable "memory" {
   type      = number
 }
 
-variable "datastore_id" {
+variable "storage_pool" {
   type      = string
 }
 
@@ -18,14 +18,23 @@ variable "disk_size" {
   type      = number
 }
 
-variable "cores" {
+variable "cpu_cores" {
   type      = number
+}
+
+variable "bios" {
+  type      = string
+  default   = "ovmf"
 }
 
 variable "image_url" {
   type      = string
 }
 
-variable "mac_address" {
+variable "network_mac_address" {
   type      = string
+}
+
+variable "network_vlan_id" {
+  type      = number
 }
