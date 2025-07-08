@@ -1,7 +1,3 @@
-variable "username" {
-  type      = string
-}
-
 variable "hostname" {
   type      = string
 }
@@ -14,22 +10,22 @@ variable "memory" {
   type      = number
 }
 
+variable "datastore_id" {
+  type      = string
+}
+
 variable "disk_size" {
   type      = number
 }
 
-variable "ignition_file" {
-  type      = string
-}
-
-variable "ssh_public_key" {
-  type      = string
+variable "cores" {
+  type      = number
 }
 
 variable "image_url" {
   type      = string
 }
 
-variable "ip" {
+variable "mac_address" {
   type      = string
 }

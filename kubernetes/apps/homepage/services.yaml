@@ -1,0 +1,39 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+
+- Homelab Dashboard:
+    - Unifi:
+        href: http://192.168.0.1
+        description: Unifi Dream Machine Router.
+        icon: unifi
+
+    - Proxmox:
+        href: https://proxmox.home.arpa
+        description: VM management.
+        icon: proxmox
+
+    - Pi-hole:
+        href: https://pihole.home.arpa/admin
+        description: Network-wide ad blocking and privacy solution.
+        icon: pi-hole
+
+    - Home Assistant:
+        href: http://homeassisstant.home.arpa
+        description: Smart home automation and control.
+        icon: home-assistant
+
+    - Nextcloud:
+        href: https://192.168.50.246
+        description: Secure and private file storage and collaboration.
+        icon: nextcloud
+
+    - Immich:
+        href: https://immich.home.arpa
+        description: Photo and media management platform.
+        icon: immich
+
+    - Calibre:
+        href: https://calibre.home.arpa
+        description: Access your eBook library and manager.
+        icon: calibre

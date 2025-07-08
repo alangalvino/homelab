@@ -1,24 +1,25 @@
 #+TITLE: Homelab Documentation
 
 * Homelab Overview
-This homelab consists of three Mac Mini nodes running Proxmox VE, a Synology NAS for shared storage, and an Alpine VM for backup. Container management is handled by Portainer running on CoreOS VMs. The entire environment is configured via Terraform for full automation.
-
+This homelab consists of: 
+  - Three Mac Mini nodes running Proxmox VE
+  - Synology NAS for shared storage
+  - Alpine VM for backup
+  - Kubernetes cluster on top of talos
+  - Apps deployed on top of Kubernetes (exceptions are Home Assistant
+    and Alpine NFS Backup server)
+  - Entire environment configured with Terraform for full automation
 * Hardware Summary
-
-| Node         | CPU                       | RAM   | Storage                              | Role                                        |
-|--------------+---------------------------+-------+--------------------------------------+---------------------------------------------|
-| Mac Mini #1  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                           | Primary Proxmox host, container workloads   |
-| Mac Mini #2  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                           | Secondary Proxmox host, container workloads |
-| Mac Mini #3  | Intel Core i5-4278U       | 8 GB  | 1 TB HDD                             | Backup VM, infrastructure services          |
-| Synology NAS | Realtek RTD1296 Quad-Core | 2 GB  | 4 x 4TB HDD in RAID 10 (≈8TB usable) | Synology DS418 (NFS storage for containers) |
-
+| Node         | CPU                       | RAM   | Storage                           | Role                                                                                     |
+|--------------+---------------------------+-------+-----------------------------------+------------------------------------------------------------------------------------------|
+| Mac Mini #1  | Intel Core i5-4278U       | 8 GB  | 1 TB HDD                          | Proxmox node running: Backup VM, Home Assistant VM, Kubernetes Control Plane on Talos VM |
+| Mac Mini #2  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                        | Proxmox node running: Kurbentes Worker on Talos VM                                       |
+| Mac Mini #3  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                        | Proxmox node running: Kurbentes Worker on Talos VM                                       |
+| Synology NAS | Realtek RTD1296 Quad-Core | 2 GB  | 4 x 4TB HDD in SHR2 (≈8TB usable) | Synology DS418 (NFS storage for containers)                                              |
 * Network Layout
-
 - All VMs and containers share the subnet: 192.168.50.0/24
 - Static IP allocations separate hosts, VMs, and containers for clarity
-
 * Architecture Diagram
-
 #+BEGIN_SRC text :exports both :results verbatim
                +-----------------------------------------+
                |            Proxmox Cluster              |
@@ -44,109 +45,38 @@ This homelab consists of three Mac Mini nodes running Proxmox VE, a Synology NAS
               +---------------------------------------+
 #+END_SRC
 #+CAPTION: ASCII Logical architecture showing VM roles, container placement, and storage connectivity.
-
 * Static IP Addressing Scheme
 
-| Device/Service            |    IP Address |
-|---------------------------+---------------|
-| Mac Mini #1 (Proxmox)     | 192.168.50.10 |
-| Mac Mini #2 (Proxmox)     | 192.168.50.11 |
-| Mac Mini #3 (Proxmox)     | 192.168.50.12 |
-| Synology NAS              | 192.168.50.13 |
-| Portainer Server VM       | 192.168.50.20 |
-| Portainer Agent VM        | 192.168.50.21 |
-| Alpine Backup VM          | 192.168.50.22 |
-| Caddy (Reverse Proxy)     | 192.168.50.30 |
-| Pi-hole (DNS)             | 192.168.50.31 |
-| Homepage (Static site)    | 192.168.50.32 |
-| Immich (Image storage)    | 192.168.50.33 |
-| Paperless-ngx (Documents) | 192.168.50.34 |
-| Nextcloud (Backup sync)   | 192.168.50.35 |
-| Home Assistant            | 192.168.50.36 |
-
-* Software and Roles
-
-** Proxmox VE
-- Virtualization hypervisor on all three Mac Minis
-- Hosts VMs running CoreOS, Alpine, and container workloads
-- All VM provisioning is managed via Terraform using the Proxmox provider
-
-** CoreOS VMs
-- Run Podman and Portainer for container management
-- Two VMs: one Portainer Server, one Portainer Agent
-- Provisioned and configured via Terraform + Ignition (Butane syntax)
-
-** Alpine VM
-- Runs backup jobs using rsync
-- Rsyncs data from Synology NAS for versioned backups
-- Provisioned with Terraform and shell provisioners
-
-** Synology NAS
-- Provides NFS shared storage for container volumes
-- Configured with 4 x 4TB HDDs in RAID 10 (~8TB usable)
-- Data folders for each container application mounted on CoreOS VMs
-
-** Containers (managed via Portainer)
-- Caddy: Reverse proxy managing HTTPS & routing
-- Pi-hole: Network-wide DNS ad blocker
-- Homepage: Static index.html for homelab overview
-- Immich: Image storage backend
-- Paperless-ngx: Document management
-- Nextcloud: File backup and synchronization
-- Home Assistant: Home automation platform (containerized)
-
+| Device/Service            |     IP Address |
+|---------------------------+----------------|
+| Synology NAS              |  192.168.50.10 |
+| Mac Mini #1 (Proxmox)     |  192.168.50.11 |
+| Mac Mini #2 (Proxmox)     |  192.168.50.12 |
+| Mac Mini #3 (Proxmox)     |  192.168.50.13 |
+| Kubernetes Master         |  192.168.50.21 |
+| Kubernetes Worker #1      |  192.168.50.22 |
+| Kubernetes Worker #2      |  192.168.50.23 |
+| Alpine Backup Server      |  192.168.50.24 |
+| Home Assistant            |  192.168.40.25 |
+| Pi-hole (DNS)             | 192.168.50.101 |
+| Homepage (Static site)    | 192.168.50.102 |
+| Immich (Image storage)    | 192.168.50.103 |
+| Paperless-ngx (Documents) | 192.168.50.104 |
+| Nextcloud (Backup sync)   | 192.168.50.105 |
 * Backup Strategy
-
-- Synology runs RAID 10 for primary data resilience
-- Alpine VM runs scheduled `rsync` jobs to create daily backups
-- Backup strategy is defined and triggered via Terraform + systemd timers
-- Cloud backup via Synology C2 or rclone (optional, not automated yet)
-
-* Notes on Home Assistant Container
-
-- Runs in VM
-
-* Automation with Terraform
-
-- Terraform manages:
-  - VM creation (Proxmox provider)
-  - Network setup and static IP assignment
-  - Ignition provisioning for CoreOS
-  - Disk layout for Alpine and CoreOS VMs
-- Git repository stores all manifests and provisioning code
-- Terraform state managed locally or optionally via remote backend
-  (e.g., S3 + Locking)
-  
+- Synology runs SHR2 for primary data resilience
+- Alpine NFS Backup Server VM runs scheduled jobs to create daily backups of Synology volume
+- Cloud encrypted backup via Synology (cloud provider TBD)
+- Yearly backup to an external HDD
 * Homelab Data File Structure Layout
-
 #+BEGIN_SRC text :exports both :results verbatim
-# On Synology NAS
-/mnt/nas/apps/
-├── caddy/
-│   ├── data/
-│   └── config/
-├── pihole/
-│   ├── etc-dnsmasq.d/
-│   └── etc-pihole/
-├── homepage/
-│   └── config/
-├── immich/
-│   ├── library/
-│   └── config/
-├── paperless/
-│   ├── data/
-│   ├── media/
-│   └── consume/
-├── nextcloud/
-│   ├── html/
-│   ├── config/
-│   └── data/
-├── home-assistant/
-│   └── config/
-└── portainer/
-    ├── server-data/
-    └── agent-data/
-
-# On Alpine NFS Backup Server
-/mnt/backups/
+/volume1/
+├── homelab/
+│   ├── apps/
+│   ├── proxmox/
+│   ├── terraform/
+│   └── kubernetes/
+├── users/
+├── backups/
+└── public/
 #+END_SRC
