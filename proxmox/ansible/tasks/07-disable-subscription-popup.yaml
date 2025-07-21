@@ -1,0 +1,30 @@
+# disable-subscription-popup.yml
+
+- name: Backup original file
+  ansible.builtin.copy:
+    src: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    dest: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js.bak
+    remote_src: true
+
+- name: Remove the line with res null/undefined check
+  ansible.builtin.lineinfile:
+    path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    regexp: '^\s*if \(res === null \|\| res === undefined \|\| !res \|\| res$'
+    state: absent
+
+- name: Remove the line with data.status check
+  ansible.builtin.lineinfile:
+    path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    regexp: '^\s*\.data\.status\.toLowerCase\(\)'
+    state: absent
+
+- name: Insert simplified if (false) condition
+  ansible.builtin.lineinfile:
+    path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    insertafter: '^\s*let res = response\.result;$'
+    line: '    if (false) {'
+
+- name: Restart pveproxy
+  ansible.builtin.systemd:
+    name: pveproxy
+    state: restarted
