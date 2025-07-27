@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.79.0"
+      version = "0.80.0"
     }
   }
 }
@@ -25,6 +25,10 @@ resource "null_resource" "download_image" {
       mv ${local.temp_dir}/${var.image_name}.qcow2 ${local.image_file}
     EOT
   }
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "proxmox_virtual_environment_file" "upload_image" {
@@ -37,6 +41,10 @@ resource "proxmox_virtual_environment_file" "upload_image" {
   }
 
   depends_on = [null_resource.download_image]
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "null_resource" "cleanup" {
@@ -50,4 +58,8 @@ resource "null_resource" "cleanup" {
   }
 
   depends_on = [proxmox_virtual_environment_file.upload_image]
+
+  lifecycle {
+    ignore_changes = all
+  }
 }

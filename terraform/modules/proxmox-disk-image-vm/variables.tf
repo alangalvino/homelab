@@ -10,10 +10,6 @@ variable "memory" {
   type      = number
 }
 
-variable "storage_pool" {
-  type      = string
-}
-
 variable "disk_size" {
   type      = number
 }
@@ -24,7 +20,6 @@ variable "cpu_cores" {
 
 variable "bios" {
   type      = string
-  default   = "ovmf"
 }
 
 variable "image_url" {
@@ -37,4 +32,9 @@ variable "network_mac_address" {
 
 variable "network_vlan_id" {
   type      = number
+}
+
+variable "ip_address" {
+  type      = string
+  default   = null
 }

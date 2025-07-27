@@ -17,4 +17,5 @@ variable "proxmox_node" {
 variable "storage_pool" {
   description = "Datastore ID on the target node"
   type        = string
+  default     = "local"
 }
