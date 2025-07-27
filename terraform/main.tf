@@ -51,4 +51,39 @@ module "home_assistant_vm" {
   network_mac_address = "02:5f:52:b4:3d:40"
 }
 
+module "talos_node_1" {
+  source              = "./modules/talos-node"
+  proxmox_node        = "pve1"
+  hostname            = "talos-controlplane"
+  cpu_cores           = 2
+  memory              = 4096
+  disk_size           = 200
+  ip_address          = "192.168.50.21"
+  gateway_ip          = "192.168.50.1"
+  network_mac_address = "e6:3f:f3:99:40:3d"
+}
+
+module "talos_node_2" {
+  source              = "./modules/talos-node"
+  proxmox_node        = "pve2"
+  hostname            = "talos-worker-1"
+  cpu_cores           = 2
+  memory              = 14336
+  disk_size           = 200
+  ip_address          = "192.168.50.22"
+  gateway_ip          = "192.168.50.1"
+  network_mac_address = "b6:1a:77:fb:38:60"
+}
+
+module "talos_node_3" {
+  source              = "./modules/talos-node"
+  proxmox_node        = "pve3"
+  hostname            = "talos-worker-2"
+  cpu_cores           = 2
+  memory              = 6144
+  disk_size           = 200
+  ip_address          = "192.168.50.23"
+  gateway_ip          = "192.168.50.1"
+  network_mac_address = "ca:29:05:23:c7:cd"
+}
 }
