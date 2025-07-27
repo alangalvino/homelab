@@ -86,4 +86,13 @@ module "talos_node_3" {
   gateway_ip          = "192.168.50.1"
   network_mac_address = "ca:29:05:23:c7:cd"
 }
+module "talos_cluster" {
+  source     = "./modules/talos-cluster"
+  depends_on = [module.talos_node_1, module.talos_node_2, module.talos_node_3]
+
+  cluster_name     = "k8s-cluster"
+  cluster_endpoint = "192.168.50.21"
+  controlplanes    = ["192.168.50.21"]
+  workers          = ["192.168.50.22", "192.168.50.23"]
+}
 }
