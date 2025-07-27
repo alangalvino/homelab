@@ -51,9 +51,4 @@ module "home_assistant_vm" {
   network_mac_address = "02:5f:52:b4:3d:40"
 }
 
-resource "proxmox_virtual_environment_haresource" "home_assistant_high_availability" {
-  resource_id  = "vm:${module.home_assistant_vm.id}"
-  comment = "Home Assistant HA"
-  max_relocate = 1
-  max_restart = 1
 }
