@@ -27,6 +27,11 @@ variable "cpu_cores" {
   default   = 2
 }
 
+variable "cpu_type" {
+  type      = string
+  default   = null
+}
+
 variable "agent_enabled" {
   type      = bool
   default   = true
@@ -39,12 +44,12 @@ variable "memory" {
 
 variable "efi_storage_pool" {
   type      = string
-  default   = null
+  default   = "local-lvm"
 }
 
 variable "storage_pool" {
   type      = string
-  default   = "nfs"
+  default   = "local-lvm"
 }
 
 variable "disk_size" {
@@ -77,6 +82,11 @@ variable "network_mac_address" {
 }
 
 variable "ip_address" {
+  type      = string
+  default   = null
+}
+
+variable "gateway_ip" {
   type      = string
   default   = null
 }

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.79.0"
+      version = "0.80.0"
     }
   }
 }
@@ -16,6 +16,7 @@ resource "proxmox_virtual_environment_vm" "proxmox_vm" {
 
   cpu {
     cores = var.cpu_cores
+    type = var.cpu_type
   }
 
   agent {
@@ -27,7 +28,7 @@ resource "proxmox_virtual_environment_vm" "proxmox_vm" {
   }
 
   efi_disk {
-    datastore_id = var.efi_storage_pool
+    datastore_id = var.bios == "ovmf" ? var.efi_storage_pool : null
   }
 
   disk {
@@ -47,7 +48,13 @@ resource "proxmox_virtual_environment_vm" "proxmox_vm" {
     ip_config {
       ipv4 {
 	address = var.ip_address != null ? "${var.ip_address}/${var.subnet_mask}" : null
+	gateway = var.gateway_ip != null ? var.gateway_ip : null
       }
     }
+  }
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [initialization]
   }
 }
