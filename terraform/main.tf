@@ -133,4 +133,25 @@ resource "terraform_data" "apply_metallb_configs" {
     interpreter = ["/bin/bash", "-c"]
   }
 }
+resource "kubernetes_namespace" "longhorn" {
+  metadata {
+    name = "longhorn-system"
+
+    labels = {
+      "pod-security.kubernetes.io/enforce"         = "privileged"
+      "pod-security.kubernetes.io/enforce-version" = "latest"
+      "pod-security.kubernetes.io/audit"           = "privileged"
+      "pod-security.kubernetes.io/warn"            = "privileged"
+    }
+
+  }
+}
+
+resource "helm_release" "longhorn" {
+  name       = "longhorn"
+  repository = "https://charts.longhorn.io"
+  chart      = "longhorn"
+  namespace  = "longhorn-system"
+  depends_on = [kubernetes_namespace.longhorn]
+}
 }
