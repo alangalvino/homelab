@@ -86,6 +86,7 @@ module "talos_node_3" {
   gateway_ip          = "192.168.50.1"
   network_mac_address = "ca:29:05:23:c7:cd"
 }
+
 module "talos_cluster" {
   source     = "./modules/talos-cluster"
   depends_on = [module.talos_node_1, module.talos_node_2, module.talos_node_3]
@@ -95,6 +96,7 @@ module "talos_cluster" {
   controlplanes    = ["192.168.50.21"]
   workers          = ["192.168.50.22", "192.168.50.23"]
 }
+
 resource "kubernetes_namespace" "metallb" {
   metadata {
     name = "metallb-system"
@@ -133,6 +135,7 @@ resource "terraform_data" "apply_metallb_configs" {
     interpreter = ["/bin/bash", "-c"]
   }
 }
+
 resource "kubernetes_namespace" "longhorn" {
   metadata {
     name = "longhorn-system"
@@ -154,4 +157,18 @@ resource "helm_release" "longhorn" {
   namespace  = "longhorn-system"
   depends_on = [kubernetes_namespace.longhorn]
 }
+
+resource "helm_release" "pihole" {
+  name             = "pihole"
+  repository       = "https://mojo2600.github.io/pihole-kubernetes/"
+  chart            = "pihole"
+  namespace        = "pihole"
+  create_namespace = true
+  version          = "2.31.0"
+
+  values = [
+    file("./helm/pihole.yaml")
+  ]
+
+  depends_on = [helm_release.longhorn, terraform_data.apply_metallb_configs]
 }
