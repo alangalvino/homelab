@@ -1,12 +1,8 @@
-variable "username" {
-  type      = string
-}
-
 variable "hostname" {
   type      = string
 }
 
-variable "node_name" {
+variable "proxmox_node" {
   type      = string
 }
 
@@ -18,11 +14,11 @@ variable "disk_size" {
   type      = number
 }
 
-variable "ignition_file" {
-  type      = string
+variable "cpu_cores" {
+  type      = number
 }
 
-variable "ssh_public_key" {
+variable "bios" {
   type      = string
 }
 
@@ -30,6 +26,15 @@ variable "image_url" {
   type      = string
 }
 
-variable "ip" {
+variable "network_mac_address" {
   type      = string
+}
+
+variable "network_vlan_id" {
+  type      = number
+}
+
+variable "ip_address" {
+  type      = string
+  default   = null
 }

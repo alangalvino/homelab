@@ -1,0 +1,14 @@
+- name: Backup original file
+  ansible.builtin.copy:
+    src: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    dest: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js.bak
+    remote_src: true
+
+- name: Replace first occurence of subscription validation using sed
+  ansible.builtin.shell: >
+    sed -i '0,/res\.data\.status\.toLowerCase()\ !== \x27active\x27/s//res.data.status.toLowerCase() == '\''active'\''/' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+
+- name: Restart pveproxy
+  ansible.builtin.systemd:
+    name: pveproxy
+    state: restarted

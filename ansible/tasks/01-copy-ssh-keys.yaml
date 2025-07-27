@@ -1,0 +1,5 @@
+- name: Copy ssh-key to root user
+  ansible.builtin.authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '~/.ssh/homelab.pub') }}"

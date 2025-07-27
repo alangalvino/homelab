@@ -1,0 +1,27 @@
+- name: Create systemd service for setpci to run at boot
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/autoboot-after-power-failure.service
+    content: |
+      [Unit]
+      Description=Run setpci command after startup
+      After=network.target
+
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/bin/setpci -s 0:1f.0 0xa4.b=0:1
+      RemainAfterExit=true
+      User=root
+      Environment=SYSTEMD_LOG_LEVEL=debug
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Enable and start autoboot service
+  ansible.builtin.systemd:
+    name: autoboot-after-power-failure.service
+    enabled: yes
+    state: started
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes

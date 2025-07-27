@@ -1,0 +1,7 @@
+- name: Add NFS storage to Proxmox (run on master node only)
+  command: >
+    pvesm add nfs nfs
+    --server {{ nfs_server }}
+    --export {{ nfs_export }}
+    --content images,iso,backup
+  when: inventory_hostname == groups['proxmox'][0]

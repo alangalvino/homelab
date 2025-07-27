@@ -1,0 +1,12 @@
+- name: Initialize cluster on master node
+  command: pvecm create {{ cluster_name }}
+  when: inventory_hostname == groups['proxmox'][0]
+
+- name: Wait for cluster to be ready
+  pause:
+    seconds: 30
+  when: inventory_hostname == groups['proxmox'][0]
+
+- name: Join cluster on other nodes
+  command: pvecm add {{ hostvars[groups['proxmox'][0]].ansible_host }}
+  when: inventory_hostname != groups['proxmox'][0]

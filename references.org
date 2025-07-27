@@ -1,3 +1,9 @@
 * References
-- ttps://spacelift.io/blog/terraform-proxmox-providerM[[https://spacelift.io/blog/terraform-proxmox-provider][How to use Terraform and Proxmox to Deploy a VM]]
-- https://blog.cloudbending.dev/posts/fedora-coreos-on-proxmox/
+- [[https://www.wundertech.net/how-to-set-up-a-cluster-in-proxmox/][How to create a Proxmox cluster]]
+- [[https://github.com/andrewglass3/ProxmoxCloudInitScript/blob/master/create-ubuntu-jammy-template.sh][Script to create VM template on Proxmox]]
+- [[https://olav.ninja/talos-cluster-on-proxmox-with-terraform][Talos cluster on Proxmox with Terraform]]
+- [[https://ynovytskyy.medium.com/homelab-kubernetes-platform-with-a-single-terraform-apply-821cd766a2eb][Homelab Kubernetes Platform with a single Terraform apply]]
+- [[https://medium.com/@ZiXianZeroX/metallb-setup-and-configuration-in-kubernetes-via-terraform-c5021117784b][MetalLB Setup and Configuration in Kubernetes via Terraform]]
+- [[https://den.dev/blog/pihole/][The Beauty Of Having A Pi-hole]]
+
+
