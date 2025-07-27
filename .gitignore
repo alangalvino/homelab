@@ -5,3 +5,5 @@ logs/
 *.tfvars
 .terraform/
 .terraform.lock.hcl
+talosconfig
+kubectlconfig
