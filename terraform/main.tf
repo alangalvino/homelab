@@ -37,16 +37,17 @@ provider "proxmox" {
 }
 
 module "home_assistant_vm" {
-  source = "./modules/proxmox-disk-image-vm"
-  hostname = "home-assistant"
+  source       = "./modules/proxmox-disk-image-vm"
+  hostname     = "home-assistant"
   proxmox_node = "pve3"
-  cpu_cores = 2
-  memory = 6144
-  disk_size = 100
-  storage_pool = "nfs"
-  image_url = "https://github.com/home-assistant/operating-system/releases/download/15.2/haos_ova-15.2.qcow2.xz"
-  # Mapped to 192.168.40.25 ip in Unifi
-  network_vlan_id = 40
+  cpu_cores    = 2
+  memory       = 6144
+  disk_size    = 100
+  bios         = "ovmf"
+  image_url    = "https://github.com/home-assistant/operating-system/releases/download/15.2/haos_ova-15.2.qcow2.xz"
+  # IoT VLAN_ID is 40
+  ip_address          = "192.168.40.24"
+  network_vlan_id     = 40
   network_mac_address = "02:5f:52:b4:3d:40"
 }
 
