@@ -27,7 +27,7 @@ resource "helm_release" "metallb" {
 
 resource "terraform_data" "metallb_configs" {
   depends_on = [helm_release.metallb]
-  input      = file("./metallb-config.yaml")
+  input      = file("${path.module}/metallb/metallb-config.yaml")
   provisioner "local-exec" {
     when        = destroy
     command     = "echo '${self.input}' | kubectl delete -f -"

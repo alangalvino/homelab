@@ -13,7 +13,7 @@ terraform {
       version = "2.38.0"
     }
     talos = {
-      source = "siderolabs/talos"
+      source  = "siderolabs/talos"
       version = "0.8.1"
     }
   }
