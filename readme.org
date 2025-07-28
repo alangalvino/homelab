@@ -22,31 +22,27 @@ This homelab consists of:
 * Architecture Diagram
 #+BEGIN_SRC text :exports both :results verbatim
                +-----------------------------------------+
-               |            Proxmox Cluster              |
-               +------------------+----------------------+ 
-               |                  |                      |
-       +-----------------+ +------------------+ +----------------------+
-       | Mac Mini #1     | | Mac Mini #2      | | Mac Mini #3          |
-       | 192.168.50.10   | | 192.168.50.11    | | 192.168.50.12        |
-       +-------+---------+ +--------+---------+ +--------+-------------+
+               |             Proxmox Cluster             |
+               +--------------------+--------------------+ 
                |                    |                    |
-     +----------------------+ +-----------------+ +--------------------+
-     | Portainer Server VM  | | Portainer Agent | | Backup VM (Alpine) |
-     | - Caddy Container    | | Nextcloud       | | Monitoring VM      |
-     | - Pi-hole Container  | | Immich          | | Home Assistant VM  |
-     | - Homepage Container | | Paperless-ngx   | +--------------------+
-     +----------------------+ +-----------------+
-
-                               |
-                               v
-              +---------------------------------------+
-              |          Synology NAS (DS418)         |
-              |          192.168.50.13                |
-              +---------------------------------------+
+       +-----------------+ +------------------+ +------------------+
+       | Mac Mini #1     | | Mac Mini #2      | | Mac Mini #3      |
+       | 192.168.50.11   | | 192.168.50.12    | | 192.168.50.13    |
+       +-------+---------+ +--------+---------+ +--------+---------+
+               |                    |                    |
+       +---------------+   +-----------------+  +----------------+
+       | Talos Master  |   | Talos Worker 1  |  | Talos Worker 2 |
+       | 192.168.50.21 |   | 192.168.50.22   |  | 192.168.50.23  |
+       +---------------+   +-----------------+  +----------------+
+                                    |
+                                    v
+                           +-----------------+
+                           |  Synology NAS   |
+                           |  192.168.50.10  |
+                           +-----------------+
 #+END_SRC
 #+CAPTION: ASCII Logical architecture showing VM roles, container placement, and storage connectivity.
 * Static IP Addressing Scheme
-
 | Device/Service            |     IP Address |
 |---------------------------+----------------|
 | Synology NAS              |  192.168.50.10 |
@@ -119,13 +115,12 @@ This homelab consists of:
   - CPU: Realtek RTD1296 Quad-Core
   - RAM: 2 GB
   - Storage: 4 x 4TB HDD (SHR2 ≈8TB usable)
-    
 * Backup Strategy
 - Synology runs SHR2 for primary data resilience
 - Alpine NFS Backup Server VM runs scheduled jobs to create daily backups of Synology volume
 - Cloud encrypted backup via Synology (cloud provider TBD)
 - Yearly backup to an external HDD
-* Homelab Data File Structure Layout
+* Homelab NFS Data File Structure Layout
 #+BEGIN_SRC text :exports both :results verbatim
 /volume1/
 ├── homelab/
