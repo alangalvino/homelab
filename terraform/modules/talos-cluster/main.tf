@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    talos = {
-      source = "siderolabs/talos"
-      version = "0.8.1"
-    }
-  }
-}
-
 resource "talos_machine_secrets" "this" {}
 
 data "talos_image_factory_extensions_versions" "this" {

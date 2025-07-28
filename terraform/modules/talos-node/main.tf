@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "0.80.0"
-    }
-  }
-}
-
 resource "proxmox_virtual_environment_download_file" "talos_image" {
   content_type = "iso"
   datastore_id = "local"

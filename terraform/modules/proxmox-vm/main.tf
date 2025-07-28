@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "0.80.0"
-    }
-  }
-}
-
 resource "proxmox_virtual_environment_vm" "proxmox_vm" {
   node_name   = var.proxmox_node
   name        = var.hostname

@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "0.80.0"
-    }
-  }
-}
-
 locals {
   temp_dir   = "/tmp/proxmox-disk-image-${uuid()}"
   image_file = "${local.temp_dir}/${var.image_name}.img"
