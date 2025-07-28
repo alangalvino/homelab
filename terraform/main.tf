@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.38.0"
     }
+    talos = {
+      source = "siderolabs/talos"
+      version = "0.8.1"
+    }
   }
 }
 
@@ -87,75 +91,14 @@ module "talos_node_3" {
   network_mac_address = "ca:29:05:23:c7:cd"
 }
 
-module "talos_cluster" {
-  source     = "./modules/talos-cluster"
+module "k8s_cluster" {
+  source     = "./modules/k8s-cluster"
   depends_on = [module.talos_node_1, module.talos_node_2, module.talos_node_3]
 
   cluster_name     = "k8s-cluster"
   cluster_endpoint = "192.168.50.21"
   controlplanes    = ["192.168.50.21"]
   workers          = ["192.168.50.22", "192.168.50.23"]
-}
-
-resource "kubernetes_namespace" "metallb" {
-  metadata {
-    name = "metallb-system"
-
-    labels = {
-      "pod-security.kubernetes.io/enforce" = "privileged"
-    }
-  }
-}
-
-resource "helm_release" "metallb" {
-  name       = "metallb"
-  repository = "https://metallb.github.io/metallb"
-  chart      = "metallb"
-  namespace  = "metallb-system"
-  depends_on = [kubernetes_namespace.metallb]
-}
-
-resource "terraform_data" "metallb_configs" {
-  depends_on = [helm_release.metallb]
-  input      = file("./metallb-config.yaml")
-  provisioner "local-exec" {
-    when        = destroy
-    command     = "echo '${self.input}' | kubectl delete -f -"
-    interpreter = ["/bin/bash", "-c"]
-  }
-}
-
-resource "terraform_data" "apply_metallb_configs" {
-  depends_on = [terraform_data.metallb_configs]
-  lifecycle {
-    replace_triggered_by = [terraform_data.metallb_configs]
-  }
-  provisioner "local-exec" {
-    command     = "echo '${terraform_data.metallb_configs.output}' | kubectl apply -f -"
-    interpreter = ["/bin/bash", "-c"]
-  }
-}
-
-resource "kubernetes_namespace" "longhorn" {
-  metadata {
-    name = "longhorn-system"
-
-    labels = {
-      "pod-security.kubernetes.io/enforce"         = "privileged"
-      "pod-security.kubernetes.io/enforce-version" = "latest"
-      "pod-security.kubernetes.io/audit"           = "privileged"
-      "pod-security.kubernetes.io/warn"            = "privileged"
-    }
-
-  }
-}
-
-resource "helm_release" "longhorn" {
-  name       = "longhorn"
-  repository = "https://charts.longhorn.io"
-  chart      = "longhorn"
-  namespace  = "longhorn-system"
-  depends_on = [kubernetes_namespace.longhorn]
 }
 
 resource "helm_release" "pihole" {
@@ -170,5 +113,5 @@ resource "helm_release" "pihole" {
     file("./helm/pihole.yaml")
   ]
 
-  depends_on = [helm_release.longhorn, terraform_data.apply_metallb_configs]
+  depends_on = [module.k8s_cluster]
 }

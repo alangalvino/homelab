@@ -1,9 +1,4 @@
-output "talosconfig" {
-  value     = module.talos_cluster.talosconfig
-  sensitive = true
-}
-
 output "kubeconfig" {
-  value     = module.talos_cluster.kubeconfig
+  value     = module.k8s_cluster.kubeconfig
   sensitive = true
 }

@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = "0.80.0"
+    }
+  }
+}
+
 module "disk_image" {
   source = "../proxmox-image-uploader"
   image_url    = var.image_url
