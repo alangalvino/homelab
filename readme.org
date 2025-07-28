@@ -1,48 +1,27 @@
 #+TITLE: Homelab Documentation
 
-* Homelab Overview
+* Overview
+[[https://github.com/alangalvino/homelab/raw/main/.static/images/homelab.png]]
+
 This homelab consists of: 
   - Three Mac Mini nodes running Proxmox VE
   - Synology NAS for shared storage
-  - Alpine VM for backup
   - Kubernetes cluster on top of talos
   - Apps deployed on top of Kubernetes (exceptions are Home Assistant
-    and Alpine NFS Backup server)
-  - Entire environment configured with Terraform for full automation
+    running as VM)
+  - Entire environment configured with Ansible, Terraform, Helm and Kustomize for full automation
 * Hardware Summary
-| Node         | CPU                       | RAM   | Storage                           | Role                                                                                     |
-|--------------+---------------------------+-------+-----------------------------------+------------------------------------------------------------------------------------------|
-| Mac Mini #1  | Intel Core i5-4278U       | 8 GB  | 1 TB HDD                          | Proxmox node running: Backup VM, Home Assistant VM, Kubernetes Control Plane on Talos VM |
-| Mac Mini #2  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                        | Proxmox node running: Kurbentes Worker on Talos VM                                       |
-| Mac Mini #3  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                        | Proxmox node running: Kurbentes Worker on Talos VM                                       |
-| Synology NAS | Realtek RTD1296 Quad-Core | 2 GB  | 4 x 4TB HDD in SHR2 (≈8TB usable) | Synology DS418 (NFS storage for containers)                                              |
-* Network Layout
+| Node         | CPU                       | RAM   | Storage                           | Role                                                       |
+|--------------+---------------------------+-------+-----------------------------------+------------------------------------------------------------|
+| Mac Mini #1  | Intel Core i5-4278U       | 8 GB  | 1 TB HDD                          | Proxmox node running: Kubernetes Control Plane on Talos VM |
+| Mac Mini #2  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                        | Proxmox node running: Kurbentes Worker on Talos VM         |
+| Mac Mini #3  | Intel Core i5-4260U       | 16 GB | 500 GB SSD                        | Proxmox node running: Kurbentes Worker on Talos VM         |
+| Synology NAS | Realtek RTD1296 Quad-Core | 2 GB  | 4 x 4TB HDD in SHR2 (≈8TB usable) | Synology NAS DS418                                         |
+* Networking
+** Overview
 - All VMs and containers share the subnet: 192.168.50.0/24
 - Static IP allocations separate hosts, VMs, and containers for clarity
-* Architecture Diagram
-#+BEGIN_SRC text :exports both :results verbatim
-               +-----------------------------------------+
-               |             Proxmox Cluster             |
-               +--------------------+--------------------+ 
-               |                    |                    |
-       +-----------------+ +------------------+ +------------------+
-       | Mac Mini #1     | | Mac Mini #2      | | Mac Mini #3      |
-       | 192.168.50.11   | | 192.168.50.12    | | 192.168.50.13    |
-       +-------+---------+ +--------+---------+ +--------+---------+
-               |                    |                    |
-       +---------------+   +-----------------+  +----------------+
-       | Talos Master  |   | Talos Worker 1  |  | Talos Worker 2 |
-       | 192.168.50.21 |   | 192.168.50.22   |  | 192.168.50.23  |
-       +---------------+   +-----------------+  +----------------+
-                                    |
-                                    v
-                           +-----------------+
-                           |  Synology NAS   |
-                           |  192.168.50.10  |
-                           +-----------------+
-#+END_SRC
-#+CAPTION: ASCII Logical architecture showing VM roles, container placement, and storage connectivity.
-* Static IP Addressing Scheme
+** Static IP Addressing Scheme
 | Device/Service            |     IP Address |
 |---------------------------+----------------|
 | Synology NAS              |  192.168.50.10 |
@@ -59,68 +38,44 @@ This homelab consists of:
 | Immich (Image storage)    | 192.168.50.103 |
 | Paperless-ngx (Documents) | 192.168.50.104 |
 | Nextcloud (Backup sync)   | 192.168.50.105 |
-* Proxmox Cluster Architecture Overview
-:PROPERTIES:
-:CREATED_AT: [2023-12-10 18:01:37]
-:END:
-** Proxmox pve1
-:PROPERTIES:
-:CREATED_AT: [2023-12-10 18:01:58]
-:END:
+* Physical Layer
+** Proxmox Cluster
+*** Proxmox pve1
 - hostname: pve1.home.arpa
 - ip: 192.168.50.11
 - url: https://192.168.50.11:8006
-- user: root
-- password: on KeepassXC
 - hardware:
   - model: Mac Mini 
   - CPU: Intel Core i5-4278U CPU @ 2.60GHz
   - RAM: 8 GB
   - Storage: 1 TB HDD
-** Proxmox pve2
-:PROPERTIES:
-:CREATED_AT: [2023-12-10 18:01:58]
-:END:
+*** Proxmox pve2
 - hostname: pve2.home.arpa
 - ip: 192.168.50.12
 - url: https://192.168.50.12:8006
-- user: root
-- password: on KeepassXC
 - hardware:
   - model: Mac Mini #2
   - CPU: Intel Core i5-4260U CPU @ 1.40GHz
   - RAM: 16 GB
   - Storage: 500 GB SSD
-** Proxmox pve3
-:PROPERTIES:
-:CREATED_AT: [2023-12-27 16:26:14]
-:END:
+*** Proxmox pve3
 - hostname: pve3.home.arpa
 - ip: 192.168.50.13
 - url: https://192.168.50.13:8006
-- user: root
-- password: on KeepassXC
 - hardware:
   - model: Mac Mini #3
   - CPU: Intel Core i5-4260U CPU @ 1.40GHz
   - RAM: 16 GB
   - Storage: 500 GB SSD
-** Synology NAS (DS418)
-:PROPERTIES:
-:CREATED_AT: [2023-12-10 18:02:00]
-:END:
+** NAS
+*** Overview
 - hostname: nas.home.arpa
 - ip: 192.168.50.10
-- hardware:
+- hardware (Synology NAS DS418):
   - CPU: Realtek RTD1296 Quad-Core
   - RAM: 2 GB
   - Storage: 4 x 4TB HDD (SHR2 ≈8TB usable)
-* Backup Strategy
-- Synology runs SHR2 for primary data resilience
-- Alpine NFS Backup Server VM runs scheduled jobs to create daily backups of Synology volume
-- Cloud encrypted backup via Synology (cloud provider TBD)
-- Yearly backup to an external HDD
-* Homelab NFS Data File Structure Layout
+*** NFS File Layout
 #+BEGIN_SRC text :exports both :results verbatim
 /volume1/
 ├── homelab/
