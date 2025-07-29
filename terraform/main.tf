@@ -59,22 +59,12 @@ module "k8s_cluster" {
   workers          = ["192.168.50.22", "192.168.50.23"]
 }
 
-resource "helm_release" "pihole" {
-  name             = "pihole"
-  repository       = "https://mojo2600.github.io/pihole-kubernetes/"
-  chart            = "pihole"
-  namespace        = "pihole"
-  create_namespace = true
-  version          = "2.31.0"
-
-  values = [
-    file("./helm/pihole.yaml")
-  ]
-
-  depends_on = [module.k8s_cluster]
-}
-
 module "homepage" {
   source     = "./modules/kustomize"
   kustomize_path = "../k8s/apps/homepage/"
+}
+
+module "pihole" {
+  source     = "./modules/kustomize"
+  kustomize_path = "../k8s/apps/pihole/"
 }
