@@ -10,6 +10,8 @@ This homelab consists of:
   - Apps deployed on top of Kubernetes (exceptions are Home Assistant
     running as VM)
   - Entire environment configured with Ansible, Terraform, Helm and Kustomize for full automation
+* Installation
+To set up this homelab from scratch, follow the step-by-step guide in [[https://github.com/alangalvino/homelab/blob/main/install.org][install.org]].
 * Hardware Summary
 | Node         | CPU                       | RAM   | Storage                           | Role                                                       |
 |--------------+---------------------------+-------+-----------------------------------+------------------------------------------------------------|
