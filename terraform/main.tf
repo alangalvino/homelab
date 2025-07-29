@@ -18,7 +18,7 @@ module "talos_node_1" {
   proxmox_node        = "pve1"
   hostname            = "talos-controlplane"
   cpu_cores           = 2
-  memory              = 4096
+  memory              = 6144
   disk_size           = 200
   ip_address          = "192.168.50.21"
   gateway_ip          = "192.168.50.1"

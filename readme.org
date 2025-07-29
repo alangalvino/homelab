@@ -1,7 +1,7 @@
 #+TITLE: Homelab Documentation
 
 * Overview
-[[https://github.com/alangalvino/homelab/raw/main/.static/images/homelab.png]]
+[[https://github.com/alangalvino/homelab/raw/main/.assets/images/homelab.png]]
 
 This homelab consists of: 
   - Three Mac Mini nodes running Proxmox VE
@@ -38,44 +38,7 @@ This homelab consists of:
 | Immich (Image storage)    | 192.168.50.103 |
 | Paperless-ngx (Documents) | 192.168.50.104 |
 | Nextcloud (Backup sync)   | 192.168.50.105 |
-* Physical Layer
-** Proxmox Cluster
-*** Proxmox pve1
-- hostname: pve1.home.arpa
-- ip: 192.168.50.11
-- url: https://192.168.50.11:8006
-- hardware:
-  - model: Mac Mini 
-  - CPU: Intel Core i5-4278U CPU @ 2.60GHz
-  - RAM: 8 GB
-  - Storage: 1 TB HDD
-*** Proxmox pve2
-- hostname: pve2.home.arpa
-- ip: 192.168.50.12
-- url: https://192.168.50.12:8006
-- hardware:
-  - model: Mac Mini #2
-  - CPU: Intel Core i5-4260U CPU @ 1.40GHz
-  - RAM: 16 GB
-  - Storage: 500 GB SSD
-*** Proxmox pve3
-- hostname: pve3.home.arpa
-- ip: 192.168.50.13
-- url: https://192.168.50.13:8006
-- hardware:
-  - model: Mac Mini #3
-  - CPU: Intel Core i5-4260U CPU @ 1.40GHz
-  - RAM: 16 GB
-  - Storage: 500 GB SSD
-** NAS
-*** Overview
-- hostname: nas.home.arpa
-- ip: 192.168.50.10
-- hardware (Synology NAS DS418):
-  - CPU: Realtek RTD1296 Quad-Core
-  - RAM: 2 GB
-  - Storage: 4 x 4TB HDD (SHR2 ≈8TB usable)
-*** NFS File Layout
+* NAS NFS File Layout
 #+BEGIN_SRC text :exports both :results verbatim
 /volume1/
 ├── homelab/
