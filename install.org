@@ -3,6 +3,9 @@
 * Configure Synology NAS
 - Set static IP: =192.168.50.10=
 - Create shared folder: =/volume1/homelab=
+  - Allowed IPs: 192.168.50.0/24
+  - read/write access
+  - Set Squash to "Map all users to admin"
 * Install Proxmox on Mac Minis
 Install the [[https://www.proxmox.com/en/downloads][latest Proxmox version]] manually on each Mac Mini:
 

@@ -44,12 +44,12 @@ data:
             icon: nextcloud
 
         - Immich:
-            href: https://immich.home.arpa
+            href: https://192.168.50.102
             description: Photo and media management platform.
             icon: immich
 
         - Calibre:
-            href: https://calibre.home.arpa
+            href: http://192.168.50.103
             description: Access your eBook library and manager.
             icon: calibre
   widgets.yaml: ""
