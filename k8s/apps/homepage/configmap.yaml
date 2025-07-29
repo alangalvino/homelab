@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage
+  namespace: homepage
+  labels:
+    app: homepage
+data:
+  kubernetes.yaml: ""
+  settings.yaml: ""
+  custom.css: ""
+  custom.js: ""
+  bookmarks.yaml: ""
+  services.yaml: |
+    - Homelab Dashboard:
+        - Unifi:
+            href: http://192.168.0.1
+            description: Unifi Dream Machine Router.
+            icon: unifi
+
+        - Proxmox:
+            href: https://192.168.50.11:8006
+            description: VM management.
+            icon: proxmox
+
+        - Pi-hole:
+            href: http://192.168.50.101/admin
+            description: Network-wide ad blocking and privacy solution.
+            icon: pi-hole
+
+        - Home Assistant:
+            href: http://192.168.40.25
+            description: Smart home automation and control.
+            icon: home-assistant
+
+        - Nextcloud:
+            href: https://192.168.50.246
+            description: Secure and private file storage and collaboration.
+            icon: nextcloud
+
+        - Immich:
+            href: https://immich.home.arpa
+            description: Photo and media management platform.
+            icon: immich
+
+        - Calibre:
+            href: https://calibre.home.arpa
+            description: Access your eBook library and manager.
+            icon: calibre
+  widgets.yaml: ""
+  docker.yaml: ""

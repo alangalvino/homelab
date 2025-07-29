@@ -33,8 +33,8 @@ This homelab consists of:
 | Kubernetes Worker #2      |  192.168.50.23 |
 | Alpine Backup Server      |  192.168.50.24 |
 | Home Assistant            |  192.168.40.25 |
+| Homepage (Static site)    | 192.168.50.100 |
 | Pi-hole (DNS)             | 192.168.50.101 |
-| Homepage (Static site)    | 192.168.50.102 |
 | Immich (Image storage)    | 192.168.50.103 |
 | Paperless-ngx (Documents) | 192.168.50.104 |
 | Nextcloud (Backup sync)   | 192.168.50.105 |

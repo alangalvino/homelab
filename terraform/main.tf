@@ -73,3 +73,8 @@ resource "helm_release" "pihole" {
 
   depends_on = [module.k8s_cluster]
 }
+
+module "homepage" {
+  source     = "./modules/kustomize"
+  kustomize_path = "../k8s/apps/homepage/"
+}

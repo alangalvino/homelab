@@ -16,6 +16,10 @@ terraform {
       source  = "siderolabs/talos"
       version = "0.8.1"
     }
+    kustomization = {
+      source = "kbst/kustomization"
+      version = "0.9.6"
+    }
   }
 }
 
@@ -27,6 +31,10 @@ provider "helm" {
   kubernetes = {
     config_path = "~/.kube/config"
   }
+}
+
+provider "kustomization" {
+  kubeconfig_path = "~/.kube/config"
 }
 
 provider "proxmox" {
