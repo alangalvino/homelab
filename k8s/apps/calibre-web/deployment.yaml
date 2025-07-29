@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calibre-web
+  namespace: calibre-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calibre-web
+  template:
+    metadata:
+      labels:
+        app: calibre-web
+    spec:
+      containers:
+      - name: calibre-web
+        image: lscr.io/linuxserver/calibre-web:latest
+        ports:
+        - containerPort: 8083
+          name: http
+          protocol: TCP
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Etc/UTC"
+        - name: DOCKER_MODS
+          value: "linuxserver/mods:universal-calibre"  # optional
+        - name: OAUTHLIB_RELAX_TOKEN_SCOPE
+          value: "1"  # optional
+        volumeMounts:
+        - name: calibre-config-storage
+          mountPath: /config    # Config data stored here
+        - name: calibre-books-storage
+          mountPath: /books     # Books library stored here
+      restartPolicy: Always
+      volumes:
+      - name: calibre-books-storage
+        persistentVolumeClaim:
+          claimName: calibre-books
+      - name: calibre-config-storage
+        persistentVolumeClaim:
+          claimName: calibre-config

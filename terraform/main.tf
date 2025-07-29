@@ -68,3 +68,8 @@ module "pihole" {
   source     = "./modules/kustomize"
   kustomize_path = "../k8s/apps/pihole/"
 }
+
+module "calibre_web" {
+  source     = "./modules/kustomize"
+  kustomize_path = "../k8s/apps/calibre-web/"
+}
