@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: pihole
   name: pihole
   namespace: pihole
+  labels:
+    homelab-app: pihole
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -20,6 +20,7 @@ spec:
     metadata:
       labels:
         app: pihole
+        homelab-app: pihole
     spec:
       containers:
       - env:

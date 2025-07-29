@@ -4,7 +4,7 @@ metadata:
   name: homepage
   namespace: homepage
   labels:
-    app: homepage
+    homelab-app: homepage
 spec:
   replicas: 1
   strategy:
@@ -16,6 +16,7 @@ spec:
     metadata:
       labels:
         app: homepage
+        homelab-app: homepage
     spec:
       containers:
         - name: homepage
