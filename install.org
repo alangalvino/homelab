@@ -1,0 +1,90 @@
+#+TITLE: Homelab Installation Instructions
+
+* Configure Synology NAS
+- Set static IP: =192.168.50.10=
+- Create shared folder: =/volume1/homelab=
+* Install Proxmox on Mac Minis
+Install the [[https://www.proxmox.com/en/downloads][latest Proxmox version]] manually on each Mac Mini:
+
+** Proxmox pve1
+- Hostname: =pve1.home.arpa=
+- IP: =192.168.50.11=
+- User: =root=
+- Password: stored in KeepassXC
+- Hardware:
+  - Model: Mac Mini
+  - CPU: Intel Core i5-4278U @ 2.60GHz
+  - RAM: 8 GB
+  - Storage: 1 TB HDD
+** Proxmox pve2
+- Hostname: =pve2.home.arpa=
+- IP: =192.168.50.12=
+- User: =root=
+- Password: stored in KeepassXC
+- Hardware:
+  - Model: Mac Mini #2
+  - CPU: Intel Core i5-4260U @ 1.40GHz
+  - RAM: 16 GB
+  - Storage: 500 GB SSD
+** Proxmox pve3
+- Hostname: =pve3.home.arpa=
+- IP: =192.168.50.13=
+- User: =root=
+- Password: stored in KeepassXC
+- Hardware:
+  - Model: Mac Mini #3
+  - CPU: Intel Core i5-4260U @ 1.40GHz
+  - RAM: 16 GB
+  - Storage: 500 GB SSD
+* Configure Proxmox
+** Generate SSH key
+#+begin_src shell
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/homelab -C "homelab@homelab.home.arpa"
+#+end_src
+** Copy SSH key to nodes
+#+begin_src shell
+ssh-copy-id -i ~/.ssh/homelab.pub root@192.168.50.11
+ssh-copy-id -i ~/.ssh/homelab.pub root@192.168.50.12
+ssh-copy-id -i ~/.ssh/homelab.pub root@192.168.50.13
+#+end_src
+** Create Proxmox cluster
+*** SSH into a node
+#+begin_src shell
+ssh root@192.168.50.11
+#+end_src
+*** Create the cluster
+#+begin_src shell
+pvecm create proxmox
+#+end_src
+*** Add other nodes
+#+begin_src shell
+pvecm add 192.168.50.12
+pvecm add 192.168.50.13
+#+end_src
+** Configure cluster
+*** Install Ansible
+Follow the [[https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu][Ansible installation instructions]].
+*** Run setup playbook
+#+begin_src shell
+cd ./ansible
+ansible-playbook setup.yaml
+#+end_src
+*** Run update playbook
+#+begin_src shell
+ansible-playbook update.yaml
+#+end_src
+* Install VMs, Kubernetes, and Apps
+** Install Terraform
+Follow the [[https://developer.hashicorp.com/terraform/install][Terraform installation instructions]].
+** Initialize Terraform
+If you're in the =ansible/= folder, return to the root first.
+#+begin_src shell
+cd ./terraform
+terraform init
+#+end_src
+** Apply Terraform
+Preview changes, then apply.
+#+begin_src shell
+terraform plan   # review changes
+terraform apply  # apply changes
+#+end_src

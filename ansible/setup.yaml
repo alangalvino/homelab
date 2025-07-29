@@ -4,8 +4,9 @@
   gather_facts: false
 
   tasks:
-    - import_tasks: tasks/01-copy-ssh-keys.yaml
-    - import_tasks: tasks/02-create-cluster.yaml # create cluster setup will freeze because of master node password, do it manually
+    # copy-ssh-keys and create cluster setup will freeze because of master node password, do it manually
+    # - import_tasks: tasks/01-copy-ssh-keys.yaml
+    # - import_tasks: tasks/02-create-cluster.yaml 
     - import_tasks: tasks/03-add-nfs.yaml
     - import_tasks: tasks/04-enable-ha.yaml
     - import_tasks: tasks/05-switch-to-no-subscription.yaml
