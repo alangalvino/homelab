@@ -88,3 +88,19 @@ Preview changes, then apply.
 terraform plan   # review changes
 terraform apply  # apply changes
 #+end_src
+* Notes on Terraform Project
+The Kubernetes cluster is fully managed with Terraform — from creating Talos VMs on Proxmox to configuring the cluster itself. It currently uses MetalLB for load balancing and Longhorn for storage.
+
+All apps are standard Kubernetes manifests located in the =./k8s= folder. They're deployed using the Kustomize provider in the main Terraform file (=main.tf=).
+
+To add a new app:
+1. Create a new folder in =./k8s/apps=
+2. Add the Kubernetes manifests and a =kustomization.yaml= file
+3. Register it in =./terraform/main.tf=, for example:
+
+#+begin_src terraform
+module "pihole" {
+  source         = "./modules/kustomize"
+  kustomize_path = "../k8s/apps/pihole/"
+}
+#+end_src
