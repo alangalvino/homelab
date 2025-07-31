@@ -33,13 +33,12 @@ To set up this homelab from scratch, follow the step-by-step guide in [[https://
 | Kubernetes Master         |  192.168.50.21 |
 | Kubernetes Worker #1      |  192.168.50.22 |
 | Kubernetes Worker #2      |  192.168.50.23 |
-| Alpine Backup Server      |  192.168.50.24 |
-| Home Assistant            |  192.168.40.25 |
 | Homepage (Static site)    | 192.168.50.100 |
 | Pi-hole (DNS)             | 192.168.50.101 |
-| Immich (Image storage)    | 192.168.50.103 |
+| Immich (Image storage)    | 192.168.50.102 |
+| Calibre Web (Books)       | 192.168.50.103 |
 | Paperless-ngx (Documents) | 192.168.50.104 |
-| Nextcloud (Backup sync)   | 192.168.50.105 |
+| Home Assistant            |  192.168.40.40 |
 * NAS NFS File Layout
 #+BEGIN_SRC text :exports both :results verbatim
 /volume1/

@@ -34,14 +34,9 @@ data:
             icon: pi-hole
 
         - Home Assistant:
-            href: http://192.168.40.25
+            href: http://192.168.40.40
             description: Smart home automation and control.
             icon: home-assistant
-
-        - Nextcloud:
-            href: https://192.168.50.246
-            description: Secure and private file storage and collaboration.
-            icon: nextcloud
 
         - Immich:
             href: https://192.168.50.102
@@ -52,5 +47,10 @@ data:
             href: http://192.168.50.103
             description: Access your eBook library and manager.
             icon: calibre
+
+        - Paperless:
+            href: http://192.168.50.104
+            description: Document management.
+            icon: paperless
   widgets.yaml: ""
   docker.yaml: ""
