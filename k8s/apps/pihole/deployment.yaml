@@ -4,7 +4,7 @@ metadata:
   name: pihole
   namespace: pihole
   labels:
-    homelab-app: pihole
+    homelab/app: pihole
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -20,7 +20,7 @@ spec:
     metadata:
       labels:
         app: pihole
-        homelab-app: pihole
+        homelab/app: pihole
     spec:
       containers:
       - env:
@@ -41,6 +41,8 @@ spec:
           value: America/Recife
         - name: FTLCONF_dns_upstreams
           value: 1.1.1.1;9.9.9.9
+        - name: FTLCONF_dns_dnssec
+          value: "true"
         image: pihole/pihole:2025.07.1
         imagePullPolicy: IfNotPresent
         livenessProbe:

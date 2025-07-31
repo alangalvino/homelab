@@ -4,7 +4,7 @@ metadata:
   name: calibre-web
   namespace: calibre-web
   labels:
-    homelab-app: calibre-web
+    homelab/app: calibre-web
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
     metadata:
       labels:
         app: calibre-web
-        homelab-app: calibre-web
+        homelab/app: calibre-web
     spec:
       containers:
       - name: calibre-web
@@ -29,7 +29,7 @@ spec:
         - name: PGID
           value: "1000"
         - name: TZ
-          value: "Etc/UTC"
+          value: "America/Recife"
         - name: DOCKER_MODS
           value: "linuxserver/mods:universal-calibre"  # optional
         - name: OAUTHLIB_RELAX_TOKEN_SCOPE

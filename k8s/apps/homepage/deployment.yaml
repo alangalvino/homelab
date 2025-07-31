@@ -4,7 +4,7 @@ metadata:
   name: homepage
   namespace: homepage
   labels:
-    homelab-app: homepage
+    homelab/app: homepage
 spec:
   replicas: 1
   strategy:
@@ -16,13 +16,15 @@ spec:
     metadata:
       labels:
         app: homepage
-        homelab-app: homepage
+        homelab/app: homepage
     spec:
       containers:
         - name: homepage
           image: "ghcr.io/gethomepage/homepage:latest"
           imagePullPolicy: Always
           env:
+            - name: TZ
+              value: "America/Recife"
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: 192.168.50.100
             - name: PUID
