@@ -73,3 +73,8 @@ module "calibre_web" {
   source     = "./modules/kustomize"
   kustomize_path = "../k8s/apps/calibre-web/"
 }
+
+module "paperless" {
+  source     = "./modules/kustomize"
+  kustomize_path = "../k8s/apps/paperless/"
+}

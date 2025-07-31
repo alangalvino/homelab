@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless-db
+  namespace: paperless
+  labels:
+    homelab/app: paperless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paperless-db
+  template:
+    metadata:
+      labels:
+        app: paperless-db
+        homelab/app: paperless
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:17
+          env:
+            - name: TZ
+              value: "America/Recife"
+            - name: POSTGRES_DB
+              value: paperless
+            - name: POSTGRES_USER
+              value: paperless
+            - name: POSTGRES_PASSWORD
+              value: paperless
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data/
+      volumes:
+        - name: pgdata
+          persistentVolumeClaim:
+            claimName: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless-redis
+  namespace: paperless
+  labels:
+    homelab/app: paperless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paperless-redis
+  template:
+    metadata:
+      labels:
+        app: paperless-redis
+        homelab/app: paperless
+    spec:
+      containers:
+        - name: redis
+          image: redis:8
+          env:
+            - name: TZ
+              value: "America/Recife"
+          volumeMounts:
+            - name: redisdata
+              mountPath: /data
+      volumes:
+        - name: redisdata
+          persistentVolumeClaim:
+            claimName: redis

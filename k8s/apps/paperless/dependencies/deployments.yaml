@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotenberg
+  namespace: paperless
+  labels:
+    homelab/app: paperless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gotenberg
+  template:
+    metadata:
+      labels:
+        app: gotenberg
+        homelab/app: paperless
+    spec:
+      containers:
+        - name: gotenberg
+          image: gotenberg/gotenberg:8.20
+          env:
+            - name: TZ
+              value: "America/Recife"
+          args:
+            - "gotenberg"
+            - "--chromium-disable-javascript=true"
+            - "--chromium-allow-list=file:///tmp/.*"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tika
+  namespace: paperless
+  labels:
+    homelab/app: paperless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tika
+  template:
+    metadata:
+      labels:
+        app: tika
+        homelab/app: paperless
+    spec:
+      containers:
+        - name: tika
+          image: apache/tika:latest
+          env:
+            - name: TZ
+              value: "America/Recife"

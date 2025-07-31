@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-pgdata
+  namespace: paperless
+spec:
+  containers:
+    - name: shell
+      image: alpine:latest
+      command: ["sleep", "infinity"]
+      volumeMounts:
+        - name: pgdata
+          mountPath: /mnt/pgdata
+  volumes:
+    - name: pgdata
+      persistentVolumeClaim:
+        claimName: postgres
+  restartPolicy: Never
