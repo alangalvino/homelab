@@ -1,9 +1,8 @@
 * References
 - [[https://www.wundertech.net/how-to-set-up-a-cluster-in-proxmox/][How to create a Proxmox cluster]]
-- [[https://github.com/andrewglass3/ProxmoxCloudInitScript/blob/master/create-ubuntu-jammy-template.sh][Script to create VM template on Proxmox]]
-- [[https://olav.ninja/talos-cluster-on-proxmox-with-terraform][Talos cluster on Proxmox with Terraform]]
-- [[https://ynovytskyy.medium.com/homelab-kubernetes-platform-with-a-single-terraform-apply-821cd766a2eb][Homelab Kubernetes Platform with a single Terraform apply]]
-- [[https://medium.com/@ZiXianZeroX/metallb-setup-and-configuration-in-kubernetes-via-terraform-c5021117784b][MetalLB Setup and Configuration in Kubernetes via Terraform]]
-- [[https://den.dev/blog/pihole/][The Beauty Of Having A Pi-hole]]
-
-
+- [[https://www.debian.org/releases/bookworm/amd64/release-notes/][Debian 12 release notes]]
+- [[https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html][Podman and systemd integration]]
+- [[https://docs.podman.io/en/latest/markdown/podman-compose.1.html][podman-compose docs]]
+- [[https://docs.pi-hole.net/][Pi-hole documentation]]
+- [[https://github.com/Hypfer/deye-microinverter-cloud-free/tree/master/dummycloud][Deye dummycloud project]]
+- [[https://gethomepage.dev/installation/docker/][Homepage Docker installation guide]]

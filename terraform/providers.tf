@@ -4,37 +4,7 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.80.0"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "3.0.2"
-    }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "2.38.0"
-    }
-    talos = {
-      source  = "siderolabs/talos"
-      version = "0.8.1"
-    }
-    kustomization = {
-      source = "kbst/kustomization"
-      version = "0.9.6"
-    }
   }
-}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-provider "helm" {
-  kubernetes = {
-    config_path = "~/.kube/config"
-  }
-}
-
-provider "kustomization" {
-  kubeconfig_path = "~/.kube/config"
 }
 
 provider "proxmox" {
@@ -44,6 +14,6 @@ provider "proxmox" {
   insecure = true
   ssh {
     username    = var.homelab_username
-    private_key = file(var.homelab_ssh_private_key)
+    private_key = file(pathexpand(var.homelab_ssh_private_key))
   }
 }
