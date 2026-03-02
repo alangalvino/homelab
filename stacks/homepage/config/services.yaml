@@ -1,0 +1,30 @@
+- Homelab Dashboard:
+    - Unifi:
+        href: http://192.168.0.1
+        description: Unifi Dream Machine Router.
+        icon: unifi
+
+    - Synology:
+        href: http://192.168.50.10:5000
+        description: Synology NAS.
+        icon: synology
+
+    - Proxmox:
+        href: https://192.168.50.11:8006
+        description: VM management.
+        icon: proxmox
+
+    - Pi-hole:
+        href: http://192.168.50.100:8080/admin
+        description: Network-wide ad blocking and privacy solution.
+        icon: pi-hole
+
+    - Home Assistant:
+        href: http://192.168.40.40
+        description: Smart home automation and control.
+        icon: home-assistant
+
+    - Deye Dummycloud:
+        href: http://192.168.50.100:10000
+        description: Deye microinverter cloud-free endpoint.
+        icon: mdi-cloud

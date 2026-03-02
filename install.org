@@ -6,6 +6,7 @@
   - Allowed IPs: 192.168.50.0/24
   - read/write access
   - Set Squash to "Map all users to admin"
+
 * Install Proxmox on Mac Minis
 Install the [[https://www.proxmox.com/en/downloads][latest Proxmox version]] manually on each Mac Mini:
 
@@ -14,96 +15,96 @@ Install the [[https://www.proxmox.com/en/downloads][latest Proxmox version]] man
 - IP: =192.168.50.11=
 - User: =root=
 - Password: stored in KeepassXC
-- Hardware:
-  - Model: Mac Mini
-  - CPU: Intel Core i5-4278U @ 2.60GHz
-  - RAM: 8 GB
-  - Storage: 1 TB HDD
+
 ** Proxmox pve2
 - Hostname: =pve2.home.arpa=
 - IP: =192.168.50.12=
 - User: =root=
 - Password: stored in KeepassXC
-- Hardware:
-  - Model: Mac Mini #2
-  - CPU: Intel Core i5-4260U @ 1.40GHz
-  - RAM: 16 GB
-  - Storage: 500 GB SSD
+
 ** Proxmox pve3
 - Hostname: =pve3.home.arpa=
 - IP: =192.168.50.13=
 - User: =root=
 - Password: stored in KeepassXC
-- Hardware:
-  - Model: Mac Mini #3
-  - CPU: Intel Core i5-4260U @ 1.40GHz
-  - RAM: 16 GB
-  - Storage: 500 GB SSD
+
 * Configure Proxmox
 ** Generate SSH key
 #+begin_src shell
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/homelab -C "homelab@homelab.home.arpa"
 #+end_src
+
 ** Copy SSH key to nodes
 #+begin_src shell
 ssh-copy-id -i ~/.ssh/homelab.pub root@192.168.50.11
 ssh-copy-id -i ~/.ssh/homelab.pub root@192.168.50.12
 ssh-copy-id -i ~/.ssh/homelab.pub root@192.168.50.13
 #+end_src
+
 ** Create Proxmox cluster
 *** SSH into a node
 #+begin_src shell
 ssh root@192.168.50.11
 #+end_src
+
 *** Create the cluster
 #+begin_src shell
 pvecm create proxmox
 #+end_src
+
 *** Add other nodes
 #+begin_src shell
 pvecm add 192.168.50.12
 pvecm add 192.168.50.13
 #+end_src
+
 ** Configure cluster
 *** Install Ansible
 Follow the [[https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu][Ansible installation instructions]].
+
 *** Run setup playbook
 #+begin_src shell
 cd ./ansible
 ansible-playbook setup.yaml
 #+end_src
+
 *** Run update playbook
 #+begin_src shell
 ansible-playbook update.yaml
 #+end_src
-* Install VMs, Kubernetes, and Apps
+
+* Provision VMs and Podman Stacks
 ** Install Terraform
 Follow the [[https://developer.hashicorp.com/terraform/install][Terraform installation instructions]].
+
 ** Initialize Terraform
-If you're in the =ansible/= folder, return to the root first.
+If you are in =ansible/=, return to the project root first.
 #+begin_src shell
 cd ./terraform
 terraform init
 #+end_src
+
 ** Apply Terraform
 Preview changes, then apply.
 #+begin_src shell
-terraform plan   # review changes
-terraform apply  # apply changes
+terraform plan
+terraform apply
 #+end_src
-* Notes on Terraform Project
-The Kubernetes cluster is fully managed with Terraform — from creating Talos VMs on Proxmox to configuring the cluster itself. It currently uses MetalLB for load balancing and Longhorn for storage.
 
-All apps are standard Kubernetes manifests located in the =./k8s= folder. They're deployed using the Kustomize provider in the main Terraform file (=main.tf=).
+Terraform provisions:
+- Home Assistant VM
+- Debian container repository VM (=192.168.50.100=)
+- Podman and podman-compose on Debian
+- systemd units that auto-start compose stacks on boot
+- Stacks in =./stacks= (Pi-hole, Deye Dummycloud, Homepage)
 
-To add a new app:
-1. Create a new folder in =./k8s/apps=
-2. Add the Kubernetes manifests and a =kustomization.yaml= file
-3. Register it in =./terraform/main.tf=, for example:
-
-#+begin_src terraform
-module "pihole" {
-  source         = "./modules/kustomize"
-  kustomize_path = "../k8s/apps/pihole/"
-}
-#+end_src
+* Stack Management
+- Stack definitions live in =./stacks=
+  - =stacks/pihole/compose.yaml=
+  - =stacks/deye-dummycloud/compose.yaml=
+  - =stacks/homepage/compose.yaml=
+- Edit stack files and rerun =terraform apply= to sync and restart services.
+- Service units created on Debian VM:
+  - =podman-stack-pihole.service=
+  - =podman-stack-deye-dummycloud.service=
+  - =podman-stack-homepage.service=

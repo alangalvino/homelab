@@ -13,68 +13,33 @@ module "home_assistant_vm" {
   network_mac_address = "02:5f:52:b4:3d:40"
 }
 
-module "talos_node_1" {
-  source              = "./modules/talos-node"
-  proxmox_node        = "pve1"
-  hostname            = "talos-controlplane"
-  cpu_cores           = 2
-  memory              = 6144
-  disk_size           = 200
-  ip_address          = "192.168.50.21"
-  gateway_ip          = "192.168.50.1"
-  network_mac_address = "e6:3f:f3:99:40:3d"
-}
-
-module "talos_node_2" {
-  source              = "./modules/talos-node"
+module "container_repo_vm" {
+  source              = "./modules/proxmox-disk-image-vm"
+  hostname            = "container-repository"
   proxmox_node        = "pve2"
-  hostname            = "talos-worker-1"
   cpu_cores           = 2
-  memory              = 14336
-  disk_size           = 200
-  ip_address          = "192.168.50.22"
+  cpu_type            = "x86-64-v2-AES"
+  memory              = 4096
+  disk_size           = 64
+  bios                = "seabios"
+  image_url           = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+  ip_address          = "192.168.50.100"
   gateway_ip          = "192.168.50.1"
-  network_mac_address = "b6:1a:77:fb:38:60"
+  network_vlan_id     = null
+  network_mac_address = "3a:12:5f:b1:f6:10"
+  cloud_init_username = "debian"
+  cloud_init_ssh_keys = [trimspace(file(pathexpand(var.homelab_ssh_public_key)))]
+  agent_enabled       = false
+  on_boot             = true
+  startup_order       = 1
 }
 
-module "talos_node_3" {
-  source              = "./modules/talos-node"
-  proxmox_node        = "pve3"
-  hostname            = "talos-worker-2"
-  cpu_cores           = 2
-  memory              = 6144
-  disk_size           = 200
-  ip_address          = "192.168.50.23"
-  gateway_ip          = "192.168.50.1"
-  network_mac_address = "ca:29:05:23:c7:cd"
-}
-
-module "k8s_cluster" {
-  source     = "./modules/k8s-cluster"
-  depends_on = [module.talos_node_1, module.talos_node_2, module.talos_node_3]
-
-  cluster_name     = "k8s-cluster"
-  cluster_endpoint = "192.168.50.21"
-  controlplanes    = ["192.168.50.21"]
-  workers          = ["192.168.50.22", "192.168.50.23"]
-}
-
-module "homepage" {
-  source     = "./modules/kustomize"
-  kustomize_path = "../k8s/apps/homepage/"
-}
-
-module "pihole" {
-  source     = "./modules/kustomize"
-  kustomize_path = "../k8s/apps/pihole/"
-}
-
-module "calibre_web" {
-  source     = "./modules/kustomize"
-  kustomize_path = "../k8s/apps/calibre-web/"
-}
-
-module "paperless" {
-  source     = "./modules/kustomize"
-  kustomize_path = "../k8s/apps/paperless/"
+module "podman_stacks" {
+  source          = "./modules/podman-stacks"
+  depends_on      = [module.container_repo_vm]
+  vm_ip           = "192.168.50.100"
+  vm_user         = "debian"
+  ssh_private_key = var.homelab_ssh_private_key
+  stacks_path     = "${path.root}/../stacks"
+  stack_names     = ["pihole", "deye-dummycloud", "homepage"]
 }

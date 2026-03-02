@@ -37,6 +37,26 @@ variable "agent_enabled" {
   default   = true
 }
 
+variable "on_boot" {
+  type      = bool
+  default   = true
+}
+
+variable "startup_order" {
+  type      = number
+  default   = null
+}
+
+variable "startup_up_delay" {
+  type      = number
+  default   = null
+}
+
+variable "startup_down_delay" {
+  type      = number
+  default   = null
+}
+
 variable "memory" {
   type      = number
   default   = 4048
@@ -94,4 +114,20 @@ variable "gateway_ip" {
 variable "subnet_mask" {
   type      = string
   default   = "24"
+}
+
+variable "cloud_init_username" {
+  type      = string
+  default   = null
+}
+
+variable "cloud_init_password" {
+  type      = string
+  default   = null
+  sensitive = true
+}
+
+variable "cloud_init_ssh_keys" {
+  type      = list(string)
+  default   = []
 }
