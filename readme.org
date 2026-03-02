@@ -12,7 +12,10 @@ This homelab consists of:
   - Environment automation with Ansible and Terraform
 
 * Installation
-To set up this homelab from scratch, follow [[https://github.com/alangalvino/homelab/blob/main/install.org][install.org]].
+To set up this homelab from scratch, follow the step-by-step guide in [[https://github.com/alangalvino/homelab/blob/main/install.org][install.org]].
+
+* Deye Solarman + Home Assistant
+- Integration notes: [[docs/deye-solarman-home-assistant.md][docs/deye-solarman-home-assistant.md]]
 
 * Hardware Summary
 | Node         | CPU                       | RAM   | Storage                           | Role                                                   |
