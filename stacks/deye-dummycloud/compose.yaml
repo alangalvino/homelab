@@ -1,0 +1,12 @@
+services:
+  deye-dummycloud:
+    container_name: deye-dummycloud
+    build:
+      context: ./repo/dummycloud
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      LOGLEVEL: info
+      MQTT_BROKER_URL: mqtt://127.0.0.1
+    ports:
+      - "10000:10000"

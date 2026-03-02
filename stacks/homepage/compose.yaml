@@ -1,0 +1,14 @@
+services:
+  homepage:
+    container_name: homepage
+    image: ghcr.io/gethomepage/homepage:latest
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      TZ: America/Recife
+      HOMEPAGE_ALLOWED_HOSTS: 192.168.50.100
+    ports:
+      - "80:3000"
+    volumes:
+      - ./config:/app/config
+      - /run/podman/podman.sock:/var/run/docker.sock

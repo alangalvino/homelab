@@ -11,9 +11,16 @@ resource "null_resource" "download_image" {
   provisioner "local-exec" {
     command = <<-EOT
       mkdir -p ${local.temp_dir}
-      curl -L -o ${local.temp_dir}/${var.image_name}.qcow2.xz "${var.image_url}"
-      unxz -f ${local.temp_dir}/${var.image_name}.qcow2.xz
-      mv ${local.temp_dir}/${var.image_name}.qcow2 ${local.image_file}
+      case "${var.image_url}" in
+        *.xz)
+          curl -L -o ${local.temp_dir}/${var.image_name}.qcow2.xz "${var.image_url}"
+          unxz -f ${local.temp_dir}/${var.image_name}.qcow2.xz
+          mv ${local.temp_dir}/${var.image_name}.qcow2 ${local.image_file}
+          ;;
+        *)
+          curl -L -o ${local.image_file} "${var.image_url}"
+          ;;
+      esac
     EOT
   }
 
