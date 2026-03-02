@@ -10,7 +10,7 @@ resource "terraform_data" "install_prerequisites" {
   input = "${var.vm_user}@${var.vm_ip}"
 
   provisioner "local-exec" {
-    command = "ssh ${local.ssh_options} -i \"${local.ssh_private_key}\" \"${var.vm_user}@${var.vm_ip}\" \"sudo apt-get update && sudo apt-get install -y podman podman-compose git qemu-guest-agent && sudo systemctl enable --now qemu-guest-agent && sudo mkdir -p /opt/stacks /srv/pihole/etc-pihole /srv/pihole/etc-dnsmasq.d /srv/homepage/config /srv/deye-dummycloud && if [ -f /etc/systemd/resolved.conf ]; then sudo sed -i -E 's/^#?DNSStubListener=.*/DNSStubListener=no/' /etc/systemd/resolved.conf && sudo systemctl restart systemd-resolved || true; fi\""
+    command = "ssh ${local.ssh_options} -i \"${local.ssh_private_key}\" \"${var.vm_user}@${var.vm_ip}\" \"sudo apt-get update && sudo apt-get install -y podman podman-compose git qemu-guest-agent && sudo systemctl enable --now qemu-guest-agent podman.socket && sudo mkdir -p /opt/stacks /srv/pihole/etc-pihole /srv/pihole/etc-dnsmasq.d /srv/homepage/config /srv/deye-dummycloud && if [ -f /etc/systemd/resolved.conf ]; then sudo sed -i -E 's/^#?DNSStubListener=.*/DNSStubListener=no/' /etc/systemd/resolved.conf && sudo systemctl restart systemd-resolved || true; fi\""
   }
 }
 

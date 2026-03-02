@@ -18,13 +18,19 @@
         href: http://192.168.50.100:8080/admin
         description: Network-wide ad blocking and privacy solution.
         icon: pi-hole
+        server: local-podman
+        container: pihole
 
     - Home Assistant:
         href: http://192.168.40.40
         description: Smart home automation and control.
         icon: home-assistant
 
+- Container Status:
     - Deye Dummycloud:
         href: http://192.168.50.100:10000
-        description: Deye microinverter cloud-free endpoint.
+        description: Deye dummycloud container runtime status.
         icon: mdi-cloud
+        server: local-podman
+        container: deye-dummycloud
+        showStats: false
