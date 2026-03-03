@@ -9,10 +9,23 @@
         description: Synology NAS.
         icon: synology
 
-    - Proxmox:
+    - Proxmox pve1:
         href: https://192.168.50.11:8006
-        description: VM management.
+        description: Proxmox node.
         icon: proxmox
+        ping: 192.168.50.11
+
+    - Proxmox pve2:
+        href: https://192.168.50.12:8006
+        description: Proxmox node.
+        icon: proxmox
+        ping: 192.168.50.12
+
+    - Proxmox pve3:
+        href: https://192.168.50.13:8006
+        description: Proxmox node.
+        icon: proxmox
+        ping: 192.168.50.13
 
     - Pi-hole:
         href: http://192.168.50.100:8080/admin
@@ -25,6 +38,7 @@
         href: http://192.168.40.40
         description: Smart home automation and control.
         icon: home-assistant
+        ping: 192.168.40.40
 
 - Container Status:
     - Deye Dummycloud:
