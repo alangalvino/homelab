@@ -1,0 +1,79 @@
+#+TITLE: Proxmox Debian Powersave Config
+
+* Overview
+This guide explains how to configure a Debian-based Proxmox server (tested on Debian Trixie) running on a Mac Mini i5-4260U to:
+
+1. Set CPU governor to powersave
+2. Disable Intel Turbo Boost
+3. Force PCIe ASPM for maximum idle power savings
+
+* Step 1: Install cpupower
+Ensure the cpupower utility is installed:
+
+#+BEGIN_SRC bash
+apt update
+apt install linux-cpupower
+#+END_SRC
+
+* Step 2: Create the persistent power-saving service
+Create a systemd service to apply CPU powersave, disable turbo, and force PCIe ASPM at boot.
+
+#+BEGIN_SRC bash
+vi /etc/systemd/system/power-saver.service
+#+END_SRC
+
+Paste the following content:
+
+#+BEGIN_SRC ini
+[Unit]
+Description=Power saving: CPU powersave, disable turbo, force PCIe ASPM
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'cpupower frequency-set -g powersave; echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo; echo powersave > /sys/module/pcie_aspm/parameters/policy'
+
+[Install]
+WantedBy=multi-user.target
+#+END_SRC
+
+* Step 3: Enable the service at boot
+Reload systemd to recognize the new service and enable it:
+
+#+BEGIN_SRC bash
+systemctl daemon-reload
+systemctl enable power-saver.service
+#+END_SRC
+
+* Step 4: Apply the settings immediately
+Start the service to apply changes without reboot:
+
+#+BEGIN_SRC bash
+systemctl start power-saver.service
+#+END_SRC
+
+* Step 5: Verify the changes
+Check that CPU governor, Turbo, and PCIe ASPM are set correctly:
+
+#+BEGIN_SRC bash
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+cat /sys/devices/system/cpu/intel_pstate/no_turbo
+cat /sys/module/pcie_aspm/parameters/policy
+#+END_SRC
+
+Expected output:
+
+- CPU governor: powersave
+- Turbo: 1 (disabled)
+- PCIe ASPM: powersave
+
+* Step 6: Optional tuning notes
+- To maximize PCIe power savings further, `powersupersave` can be used instead of `powersave` in the service.
+- Turbo can be re-enabled temporarily with:
+
+#+BEGIN_SRC bash
+echo 0 > /sys/devices/system/cpu/intel_pstate/no_turbo
+#+END_SRC
+
+- This setup is safe for light workloads, including small Debian containers and Home Assistant.
+
