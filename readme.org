@@ -14,8 +14,9 @@ This homelab consists of:
 * Installation
 To set up this homelab from scratch, follow the step-by-step guide in [[https://github.com/alangalvino/homelab/blob/main/install.org][install.org]].
 
-* Deye Solarman + Home Assistant
-- Integration notes: [[docs/deye-solarman-home-assistant.md][docs/deye-solarman-home-assistant.md]]
+* Docs
+- Deye Solarman + Home Assistant: [[docs/deye-solarman-home-assistant.md][docs/deye-solarman-home-assistant.md]]
+- Proxmox power saving: [[docs/proxmox-powersaving.org][docs/proxmox-powersaving.org]]
 
 * Hardware Summary
 | Node         | CPU                       | RAM   | Storage                           | Role                                                   |
