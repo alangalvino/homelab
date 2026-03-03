@@ -17,6 +17,7 @@ To set up this homelab from scratch, follow the step-by-step guide in [[https://
 * Docs
 - Deye Solarman + Home Assistant: [[docs/deye-solarman-home-assistant.md][docs/deye-solarman-home-assistant.md]]
 - Proxmox power saving: [[docs/proxmox-powersaving.org][docs/proxmox-powersaving.org]]
+- Proxmox Wake-on-LAN testing: [[docs/proxmox-wol.org][docs/proxmox-wol.org]]
 
 * Hardware Summary
 | Node         | CPU                       | RAM   | Storage                           | Role                                                   |
@@ -30,6 +31,9 @@ To set up this homelab from scratch, follow the step-by-step guide in [[https://
 ** Overview
 - All infrastructure is on subnet =192.168.50.0/24=, except Home Assistant on IoT VLAN (=192.168.40.0/24=).
 - Container services are exposed from the Debian VM at =192.168.50.100=.
+
+** Wake-on-LAN note
+- WoL works as L2 broadcast when pve nodes are on the same VLAN; no UniFi router/firewall changes are needed in that case.
 
 ** Static IP Addressing Scheme
 | Device/Service                    |     IP Address |

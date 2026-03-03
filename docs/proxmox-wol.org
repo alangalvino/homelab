@@ -1,0 +1,156 @@
+#+TITLE: Proxmox Wake-on-LAN Test Plan (pve1/pve3 from pve2)
+
+* Overview
+This guide documents a step-by-step test plan to confirm Wake-on-LAN (WoL) from pve2 to pve1 and pve3 on 2014 Mac Minis running Proxmox (Debian 13). It assumes:
+- pve1/pve2/pve3 are in a Proxmox cluster.
+- pve1 and pve3 are wired on the LAN.
+- You want full power-off (S5) if it works, with suspend (S3) as fallback.
+
+* Prerequisites
+- Physical access to enable "Wake for network access" (or equivalent) in Mac Mini firmware/EFI for pve1 and pve3.
+- Root shell access on all nodes.
+- A note of each node's wired NIC name and MAC address.
+
+* Step 1: Identify NIC and MAC on pve1 and pve3
+On each node (pve1, pve3):
+
+#+BEGIN_SRC bash
+ip link
+#+END_SRC
+
+Locate the wired NIC name (example: =enp2s0=).
+
+#+BEGIN_SRC bash
+ethtool -P <iface>
+#+END_SRC
+
+Record:
+- pve1 MAC: =aa:bb:cc:dd:ee:ff=
+- pve3 MAC: =11:22:33:44:55:66=
+
+* Step 2: Confirm WoL support on pve1 and pve3
+On each node (pve1, pve3):
+
+#+BEGIN_SRC bash
+ethtool <iface>
+#+END_SRC
+
+Look for:
+- =Supports Wake-on: g=
+- =Wake-on: g=
+
+If =Wake-on: d= or not enabled, enable it:
+
+#+BEGIN_SRC bash
+ethtool -s <iface> wol g
+#+END_SRC
+
+* Step 3: Make WoL persistent on boot
+Create a systemd service on pve1 and pve3.
+
+#+BEGIN_SRC bash
+cat <<'EOF' > /etc/systemd/system/wol-enable.service
+[Unit]
+Description=Enable Wake-on-LAN
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/ethtool -s <iface> wol g
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable wol-enable.service
+systemctl start wol-enable.service
+#+END_SRC
+
+Re-check:
+
+#+BEGIN_SRC bash
+ethtool <iface> | grep -E 'Wake-on|Supports Wake-on'
+#+END_SRC
+
+* Step 4: Install WoL sender on pve2
+On pve2:
+
+#+BEGIN_SRC bash
+apt update
+apt install wakeonlan
+#+END_SRC
+
+* Step 5: Create wake scripts on pve2
+Create three scripts on pve2 with your MAC addresses.
+
+#+BEGIN_SRC bash
+cat <<'EOF' > /usr/local/bin/wake-pve1
+#!/usr/bin/env bash
+set -euo pipefail
+wakeonlan -i 192.168.50.255 -p 9 "aa:bb:cc:dd:ee:ff"
+EOF
+
+cat <<'EOF' > /usr/local/bin/wake-pve3
+#!/usr/bin/env bash
+set -euo pipefail
+wakeonlan -i 192.168.50.255 -p 9 "11:22:33:44:55:66"
+EOF
+
+cat <<'EOF' > /usr/local/bin/wake-pve1-pve3
+#!/usr/bin/env bash
+set -euo pipefail
+wakeonlan -i 192.168.50.255 -p 9 "aa:bb:cc:dd:ee:ff"
+wakeonlan -i 192.168.50.255 -p 9 "11:22:33:44:55:66"
+EOF
+
+chmod +x /usr/local/bin/wake-pve1 /usr/local/bin/wake-pve3 /usr/local/bin/wake-pve1-pve3
+#+END_SRC
+
+* Step 6: Quorum handling (no qdevice)
+Before taking down pve1 and pve3, set expected votes to 1 on pve2:
+
+#+BEGIN_SRC bash
+pvecm expected 1
+#+END_SRC
+
+After the nodes come back:
+
+#+BEGIN_SRC bash
+pvecm expected 3
+#+END_SRC
+
+* Step 7: Test wake from full power-off (S5)
+On pve1 and pve3:
+
+#+BEGIN_SRC bash
+shutdown -h now
+#+END_SRC
+
+From pve2, wake them:
+
+#+BEGIN_SRC bash
+/usr/local/bin/wake-pve1
+/usr/local/bin/wake-pve3
+#+END_SRC
+
+If both boot, S5 WoL works.
+
+* Step 8: If S5 fails, test suspend (S3)
+On pve1 and pve3:
+
+#+BEGIN_SRC bash
+systemctl suspend
+#+END_SRC
+
+From pve2:
+
+#+BEGIN_SRC bash
+/usr/local/bin/wake-pve1-pve3
+#+END_SRC
+
+If they wake reliably, use S3 as the standard mode.
+
+* Notes
+- WoL must be re-enabled after some firmware updates or NIC changes.
+- If only pve2 is online, cluster actions may be limited without setting expected votes.
